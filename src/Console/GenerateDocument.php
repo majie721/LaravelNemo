@@ -33,9 +33,9 @@ class GenerateDocument extends Command
     public function handle()
     {
 
-        $module = config('command.generateDocument',[]);
+        $module = config('nemo.route',[]);
         if(empty($module)){
-            return $this->error('模块配置[command.generateDocument.module]为空');
+            return $this->error('nemo.route配置不能为空');
         }
 
         $choice = array_keys($module);
@@ -46,9 +46,13 @@ class GenerateDocument extends Command
             $choice[0]
         );
 
-        $name = $choice[0];//todo
 
-        $docDir =  $module[$name]['path']??'';
+        $namespace =  $module[$name]['controller_path']??$module[$name]['namespace']??'';
+        if(!$namespace){
+            return $this->error('nemo.route.namespace配置不能为空');
+        }
+
+        $docDir = $this->getControllerDir($namespace);
 
         if(!is_dir($docDir)){
             return $this->error("配置错误:{$docDir}目录不存在");
@@ -57,9 +61,9 @@ class GenerateDocument extends Command
         $fileData = File::allFiles($docDir);
         $documents = [];
         foreach ($fileData as $fileInfo){
-           $parser = new ControllerParser($fileInfo->getRealPath(),$module[$name]['separator']??"/");
-           $document =  $parser->init()->parser();
-           $document &&  $documents = [...$documents,...$document];
+            $parser = new ControllerParser($fileInfo->getRealPath(),$module[$name]['prefix']??'',$module[$name]['path_separator']??"/");
+            $document =  $parser->init()->parser();
+            $document &&  $documents = [...$documents,...$document];
         }
 
         $documents = $this->documentsSort($documents);
@@ -83,7 +87,6 @@ class GenerateDocument extends Command
             $groupDocuments[$document->module][] = $document;
         }
 
-
         foreach ($groupDocuments as &$documentArr){
             $documentArr = $this->multiSort($documentArr,'sort');
         }
@@ -105,5 +108,15 @@ class GenerateDocument extends Command
         array_multisort(array_column($data, $key), SORT_DESC, $data);
         return  $data;
 
+    }
+
+    /**
+     * 根据路由模块获取Controller目录的路径
+     * @param string $namespace
+     * @return string
+     */
+    private function getControllerDir(string $namespace):string{
+        $namespace = substr($namespace,4);
+        return app_path($namespace);
     }
 }

@@ -3,6 +3,7 @@
 namespace LaravelNemo;
 
 use LaravelNemo\Console\GenerateDocument;
+use function PHPUnit\Framework\fileExists;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -15,6 +16,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot(): void
     {
+
+        $this->publishes([
+            __DIR__."./config/nemo.php"=>config_path('nemo.php')
+        ]);
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 GenerateDocument::class,
