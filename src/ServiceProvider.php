@@ -18,7 +18,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
 
         $this->publishes([
-            __DIR__."./config/nemo.php"=>config_path('nemo.php')
+            __DIR__ . "config/nemo.php" => config_path('nemo.php')
         ]);
 
         if ($this->app->runningInConsole()) {
@@ -27,5 +27,4 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             ]);
         }
     }
-
 }
