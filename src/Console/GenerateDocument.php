@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace LaravelNemo\Console;
 
 use LaravelNemo\Doc\ControllerDoc;
 use LaravelNemo\Doc\ControllerParser;
@@ -40,11 +40,11 @@ class GenerateDocument extends Command
 
         $choice = array_keys($module);
 
-//        $name = $this->choice(
-//            '选择待生成文档的模块',
-//            $choice,
-//            $choice[0]
-//        );
+        $name = $this->choice(
+            '选择待生成文档的模块',
+            $choice,
+            $choice[0]
+        );
 
         $name = $choice[0];//todo
 

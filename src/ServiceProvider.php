@@ -2,6 +2,8 @@
 
 namespace LaravelNemo;
 
+use LaravelNemo\Console\GenerateDocument;
+
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     protected $defer = true;
@@ -13,10 +15,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot(): void
     {
-        //发布命令文件到项目的中
-        $this->publishes([
-            __DIR__ . '/Console/GenerateDocument.php' => app_path("Console\Commands\GenerateDocument.php"),
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                GenerateDocument::class,
+            ]);
+        }
     }
 
 }
