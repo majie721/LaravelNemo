@@ -5,7 +5,7 @@ namespace LaravelNemo;
 use LaravelNemo\Console\GenerateDocument;
 use function PHPUnit\Framework\fileExists;
 
-class ServiceProvider extends \Illuminate\Support\ServiceProvider
+class NemoServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     protected $defer = true;
 
@@ -19,7 +19,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->publishes([
             __DIR__ . "/config/nemo.php" => config_path('nemo.php')
-        ]);
+        ],['laravel-assets']);
 
         if ($this->app->runningInConsole()) {
             $this->commands([
