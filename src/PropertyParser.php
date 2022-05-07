@@ -55,15 +55,23 @@ class PropertyParser
                     $this->setPropertyValue($propertyName,$propertyValue,$propertyData);
                 }else{
                     if($propertyData->arrayType){ //对象数组
-                        if(!is_array($propertyValue) && !$propertyData->allowsNull){
-                            throw new \TypeError(sprintf("Cannot assign error type to property %s::$%s",$propertyData->arrayType,$propertyName));
+                        if(is_null($propertyValue)){ //填充数据为null
+                            if($propertyData->allowsNull){
+                                $this->setPropertyValue($propertyName,null,$propertyData);
+                            }else{
+                                $propertyType =  gettype($propertyValue);
+                                throw new \TypeError(sprintf("Cannot assign null type to property %s::$%s",$propertyType,$propertyData->arrayType,$propertyName));
+                            }
+                        }elseif(is_array($propertyValue)){ //数组
+                            $arrayValues = [];
+                            foreach ($propertyValue as $item){
+                                $arrayValues[] = $this->recursionFill($propertyData->arrayType,$item);//递归填充数据
+                            }
+                            $this->setPropertyValue($propertyName,$arrayValues,$propertyData);
+                        }else{ //其他类型
+                            $propertyType =  gettype($propertyValue);
+                            throw new \TypeError(sprintf("Cannot assign an error type(%s) to property %s::$%s",$propertyType,$propertyData->arrayType,$propertyName));
                         }
-
-                       $arrayValues = [];
-                       foreach ($propertyValue as $item){
-                           $arrayValues[] = $this->recursionFill($propertyData->arrayType,$item);//递归填充数据
-                       }
-                       $this->setPropertyValue($propertyName,$arrayValues,$propertyData);
 
                     }else{ //对象
                         if(null === $propertyValue){
