@@ -25,7 +25,7 @@ class BeanGenerator implements IDocGenerator
         $headerLines[] = '';
         $headerLines[] = "namespace {$this->classInfo->namespace};";
         $headerLines[] = "";
-        $useLines[] = "use LaravelNemo\AttributeClass\ArrayShape;";
+        $useLines[] = "use LaravelNemo\AttributeClass\ArrayInfo;";
         $useLines[] = "use LaravelNemo\AttributeClass\Doc;";
         $useLines[] = "use LaravelNemo\Nemo;";
         $lines[] = "";
@@ -39,7 +39,7 @@ class BeanGenerator implements IDocGenerator
         $lines = [...$headerLines,...$useLines,...$lines,...$propertyLines];
         $lines[] = '';
         $lines[] = '}';
-        
+
         $content = implode(PHP_EOL, $lines);
         $this->content = $content;
         return new FileStore($content, 'php');
@@ -53,10 +53,9 @@ class BeanGenerator implements IDocGenerator
         $content = [];
         $tab = $this->tab();
         if($propertyInfo->arrayType){
-            $class =  $propertyInfo->arrayType === 'object'?$propertyInfo->class:$propertyInfo->arrayType;
-            $arrayType = $propertyInfo->arrayType==='array'?'':$propertyInfo->arrayType; //
-            $content[] = "{$tab}/** @var {$arrayType}[] */";
-            $content[] = "{$tab}#[ArrayShape([{$propertyInfo->className}::class])]";
+            $content[] = "{$tab}/** @var {$propertyInfo->arrayType} */";
+            $class = $propertyInfo->className?"{$propertyInfo->className}::class":'';
+            $content[] = "{$tab}#[ArrayInfo('{$propertyInfo->arrayType}',$class)]";
         }
 
         if($propertyInfo->class){

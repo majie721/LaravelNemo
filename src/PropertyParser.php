@@ -3,6 +3,7 @@
 namespace LaravelNemo;
 
 use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\Exceptions\DocumentPropertyError;
 use LaravelNemo\Exceptions\ExceptionConstCode;
 
@@ -48,7 +49,12 @@ class PropertyParser
         }
 
         $propertiesInfo =  $this->getProxyPropertyData($this->proxyObjName);
+        /**
+         * @var string $propertyName 属性名称
+         * @var mixed $propertyValue 属性值
+         */
         foreach ($waitFillData as $propertyName => $propertyValue){
+            /** @var PropertyInfo $propertyData */
             $propertyData = $propertiesInfo[$propertyName]??null;
             if($propertyData){
                 if($propertyData->isBuiltin){ //标量直接赋值
@@ -59,20 +65,15 @@ class PropertyParser
                             if($propertyData->allowsNull){
                                 $this->setPropertyValue($propertyName,null,$propertyData);
                             }else{
-                                $propertyType =  gettype($propertyValue);
-                                throw new \TypeError(sprintf("Cannot assign null type to property %s::$%s",$propertyType,$propertyData->arrayType,$propertyName));
+                                throw new \TypeError(sprintf("Cannot assign null type to property %s::$%s",$propertyData->arrayType->type,$propertyName));
                             }
-                        }elseif(is_array($propertyValue)){ //数组
-                            $arrayValues = [];
-                            foreach ($propertyValue as $item){
-                                $arrayValues[] = $this->recursionFill($propertyData->arrayType,$item);//递归填充数据
-                            }
-                            $this->setPropertyValue($propertyName,$arrayValues,$propertyData);
+                        }elseif(is_array($propertyValue)){ //数组 多维数组的情况
+                            $this->arrayFill($propertyData->arrayType->class,$propertyValue);
+                            $this->setPropertyValue($propertyName,$propertyValue,$propertyData);
                         }else{ //其他类型
                             $propertyType =  gettype($propertyValue);
                             throw new \TypeError(sprintf("Cannot assign an error type(%s) to property %s::$%s",$propertyType,$propertyData->arrayType,$propertyName));
                         }
-
                     }else{ //对象
                         if(null === $propertyValue){
                             $this->setPropertyValue($propertyName,$propertyValue,$propertyData);
@@ -86,6 +87,16 @@ class PropertyParser
         }
 
         return $this;
+    }
+
+    public function arrayFill(array &$dataList,string $class){
+        foreach ($dataList as &$item){
+            if(array_is_list($item)){
+                $this->arrayFill($class,$item);
+            }else{
+                $item &&  $item = $this->recursionFill($class,$item);
+            }
+        }
     }
 
     /**
@@ -116,7 +127,7 @@ class PropertyParser
                     $propertyInfo->allowsNull = $reflectionType->allowsNull();
                     $propertyInfo->typeName = $reflectionType->getName();
                     $propertyInfo->arrayType = $attributeParser->getArrayType();
-                    $propertyInfo->isBuiltin = $reflectionType->isBuiltin() && in_array($propertyInfo->arrayType,['','int','string','float','bool','int[]','string[]','float[]','bool[]'],true);
+                    $propertyInfo->isBuiltin = $reflectionType->isBuiltin() && !!($propertyInfo->arrayType?->isObjectArray());
                     $parseDoc && $propertyInfo->doc = $attributeParser->getDoc();
                     $parseDoc && $propertyInfo->option = $attributeParser->getDocOption();
                     $enumDoc  && $propertyInfo->enumInfo = $attributeParser->enumInfo();

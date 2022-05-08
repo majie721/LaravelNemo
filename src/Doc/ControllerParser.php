@@ -4,6 +4,7 @@ namespace LaravelNemo\Doc;
 
 use Illuminate\Support\Facades\File;
 use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\AttributeClass\ApiDoc;
 use LaravelNemo\Exceptions\DocumentPropertyError;
 use LaravelNemo\Library\Utils;

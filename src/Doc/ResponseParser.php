@@ -3,7 +3,7 @@
 namespace LaravelNemo\Doc;
 
 use LaravelNemo\Library\Utils;
-use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\AttributeClass\Doc;
 use LaravelNemo\AttributeClass\Enum;
 use LaravelNemo\Exceptions\DocumentPropertyError;

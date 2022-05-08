@@ -2,7 +2,7 @@
 
 namespace LaravelNemo\Traits;
 
-use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\AttributeClass\Doc;
 
 trait EnumTrait
@@ -11,7 +11,7 @@ trait EnumTrait
         return array_column(self::cases(), 'value');
     }
 
-    #[ArrayShape([['name'=>'string','value'=>'mixed']])]
+    #[([['name'=>'string','value'=>'mixed']])]
     public static function labelData():array{
        $data = [];
        $reflectedObj =  new \ReflectionEnum(self::class);
