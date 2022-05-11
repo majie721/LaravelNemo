@@ -27,7 +27,7 @@ class NemoServiceProvider extends \Illuminate\Support\ServiceProvider
             ]);
         }
 
-        $this->loadRoutesFrom(__DIR__.'/Front/routes/nemo.php');
+        $this->loadRoutesFrom(__DIR__.'/Front/route/nemo.php');
 
         $this->loadViewsFrom(__DIR__.'/Front/dist/', 'nemoView');
     }
