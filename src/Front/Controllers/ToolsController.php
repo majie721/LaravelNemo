@@ -13,12 +13,14 @@ use function Composer\Autoload\includeFile;
 class ToolsController extends BaseController
 {
 
-    public function index(){
 
-    }
 
     public function __construct(public GenerateService $service)
     {
+    }
+
+    public function index(){
+        return view('nemoView::index');
     }
 
     public function jsonModel(JsonModelReq $req){

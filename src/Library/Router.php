@@ -32,7 +32,7 @@ class Router
         $controller = "{$config['namespace']}\\{$controller}Controller"; //eg. "App\Http\Web\Controllers\IndexController"
 
         $action = lcfirst(Utils::camelize($action));//action为小驼峰
-        if (in_array($action, config('controller.forbidden_actions'), true)) {
+        if (in_array($action, config('nemo.forbidden_actions'), true)) {
             throw new HttpForbiddenException('The method can not access.');
         }
 
