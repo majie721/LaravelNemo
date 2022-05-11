@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelNemo\Front\Controllers\Service;
+namespace LaravelNemo\Front\Service;
 
 use LaravelNemo\Front\Controllers\Beans\ClassBean;
 use LaravelNemo\Front\Controllers\Beans\JsonModelReq;

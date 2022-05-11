@@ -4,7 +4,7 @@ namespace LaravelNemo\Front\Controllers;
 
 use LaravelNemo\Front\Controllers\Beans\ClassBean;
 use LaravelNemo\Front\Controllers\Beans\JsonModelReq;
-use App\Http\Nemo\Service\GenerateService;
+use LaravelNemo\Front\Service\GenerateService;
 use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\Doc\BeanGenerator;
 use LaravelNemo\Doc\EldGenerator;
@@ -13,7 +13,9 @@ use function Composer\Autoload\includeFile;
 class ToolsController extends BaseController
 {
 
+    public function index(){
 
+    }
 
     public function __construct(public GenerateService $service)
     {

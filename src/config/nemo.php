@@ -23,7 +23,7 @@ return [
         'nemo' => [
             'name'=>'nemo',
             'prefix' => 'nemo',
-            'namespace'=>'App\Http\Api\Controllers',
+            'namespace'=>'LaravelNemo\Front\Controllers',
             'separator'=>'_'
         ],
         'web' => [
