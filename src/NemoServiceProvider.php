@@ -19,7 +19,11 @@ class NemoServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->publishes([
             __DIR__ . "/config/nemo.php" => config_path('nemo.php')
-        ],['laravel-assets']);
+        ],'nemo');
+
+        $this->publishes([
+            __DIR__.'/Front/dist/assets' => public_path('assets'),
+        ], 'nemo');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
