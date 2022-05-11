@@ -25,7 +25,7 @@ class BeanGenerator implements IDocGenerator
         $headerLines[] = '';
         $headerLines[] = "namespace {$this->classInfo->namespace};";
         $headerLines[] = "";
-        $useLines[] = "use LaravelNemo\AttributeClass\ArrayShape;";
+        $useLines[] = "use LaravelNemo\AttributeClass\ArrayInfo;";
         $useLines[] = "use LaravelNemo\AttributeClass\Doc;";
         $useLines[] = "use LaravelNemo\Nemo;";
         $lines[] = "";
@@ -39,7 +39,7 @@ class BeanGenerator implements IDocGenerator
         $lines = [...$headerLines,...$useLines,...$lines,...$propertyLines];
         $lines[] = '';
         $lines[] = '}';
-        
+
         $content = implode(PHP_EOL, $lines);
         $this->content = $content;
         return new FileStore($content, 'php');
@@ -53,17 +53,16 @@ class BeanGenerator implements IDocGenerator
         $content = [];
         $tab = $this->tab();
         if($propertyInfo->arrayType){
-            $class =  $propertyInfo->arrayType === 'object'?$propertyInfo->class:$propertyInfo->arrayType;
-            $arrayType = $propertyInfo->arrayType==='array'?'':$propertyInfo->arrayType; //
-            $content[] = "{$tab}/** @var {$arrayType}[] */";
-            $content[] = "{$tab}#[ArrayShape([{$propertyInfo->className}::class])]";
+            $content[] = "{$tab}/** @var {$propertyInfo->arrayType} {$propertyInfo->desc} */";
+            $class = $propertyInfo->className?"{$propertyInfo->className}::class":$this->arrayClass($propertyInfo->arrayType);
+            $content[] = "{$tab}#[ArrayInfo($class,'{$propertyInfo->arrayType}')]";
         }
 
         if($propertyInfo->class){
             $useLines[] = "use {$propertyInfo->class};";
         }
 
-        $content[] ="{$tab}#[Doc('{$propertyInfo->desc}')]";
+        $content[] =$propertyInfo->required?"{$tab}#[Doc('{$propertyInfo->desc}')]":"{$tab}#[Doc('{$propertyInfo->desc}',false)]";
         $type = $propertyInfo->type !=='object'?$propertyInfo->type:$propertyInfo->className;
         $content[] ="{$tab}public {$type} \${$propertyInfo->name};";
         $content[] = '';
@@ -73,6 +72,14 @@ class BeanGenerator implements IDocGenerator
 
     private function tab(){
         return str_repeat(" ",4);
+    }
+
+    private function arrayClass(string $type){
+        preg_match('/^(\[\]|int|bool|float|string|array).*?/',$type,$maths);
+        if($maths){
+            return "'$maths[1]'";
+        }
+        return '';
     }
 
 }

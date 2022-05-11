@@ -4,6 +4,7 @@
 namespace LaravelNemo;
 
 use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\Traits\PropertyArrayAccessTrait;
 use LaravelNemo\Traits\ValidateTrait;
 

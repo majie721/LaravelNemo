@@ -3,7 +3,7 @@
 namespace LaravelNemo\Doc;
 
 use LaravelNemo\Library\Utils;
-use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\AttributeClass\Doc;
 use LaravelNemo\AttributeClass\Enum;
 use LaravelNemo\Exceptions\DocumentPropertyError;
@@ -12,11 +12,11 @@ use LaravelNemo\Nemo;
 
 class ResponseParser extends DocParser
 {
-    
+
     public function __construct()
     {
     }
-    
+
     /**
      * @param string|null $responseAttribute
      * @return ResponseParser|null
@@ -90,8 +90,8 @@ class ResponseParser extends DocParser
                     if($datum->isBuiltin){
                         $properties[] =  $this->newScalarArray($datum,$depth);
                     }else{ //对象数组
-                        $instance = $this->newObjectArray($datum,$depth)->setClassName($datum->arrayType);
-                        $instance->child =  $this->parserClassType($datum->arrayType,$depth+1);
+                        $instance = $this->newObjectArray($datum,$depth)->setClassName($datum->arrayType->class);
+                        $instance->child =  $this->parserClassType($datum->arrayType->class,$depth+1);
                         $properties[] = $instance;
                     }
                     continue;
@@ -176,7 +176,7 @@ class ResponseParser extends DocParser
         $instance->name = $info->name;
         $instance->type = match ($type){
             'scalar'=>$info->typeName,
-            'array'=>"{$info->arrayType}[]", //标量数组
+            'array'=>$info->arrayType->type, //标量数组
             'object'=>'object',
             'object[]'=>$type,
         };

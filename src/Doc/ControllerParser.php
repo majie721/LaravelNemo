@@ -4,6 +4,7 @@ namespace LaravelNemo\Doc;
 
 use Illuminate\Support\Facades\File;
 use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\AttributeClass\ApiDoc;
 use LaravelNemo\Exceptions\DocumentPropertyError;
 use LaravelNemo\Library\Utils;
@@ -52,7 +53,7 @@ class ControllerParser
         preg_match("/^<\?php\s+namespace(.*?);[\s\S]+class\s+(.*?Controller)[\s\S]*/", $content, $match);
         $className = trim($match[1]) . '\\' . trim($match[2]);
         if (!class_exists($className)) {
-            throw new \RuntimeException("{$filePath}文件解析失败");
+            throw new \RuntimeException("{$filePath}文件解析失败:$className");
         }
         $this->className = $className;
         return $this;

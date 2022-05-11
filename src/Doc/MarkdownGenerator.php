@@ -11,6 +11,8 @@ class MarkdownGenerator implements IDocGenerator
 
     private string $content;
 
+    private array $classNameDefine = [];
+
     /**
      * @param  array<string=>ControllerDoc[]> $docs
      * @param string $title
@@ -204,7 +206,13 @@ class MarkdownGenerator implements IDocGenerator
             return '';
         }
 
-        $items[] = $this->getTsType($param);
+        if(isset($this->classNameDefine[$param->className])){
+            return $this->classNameDefine[$param->className];
+        }
+
+        $data = $this->getTsType($param);
+        $items[] = $data;
+        $this->classNameDefine[$param->className] = $data;
 
         if($param->child){
             foreach ($param->child as $item){
@@ -226,7 +234,7 @@ class MarkdownGenerator implements IDocGenerator
         foreach ($param->child as $prop){
             if($prop->className){
                 if($prop->type === 'object'){
-                    $this->getTsTypeDefine($param);
+                   // $this->getTsTypeDefine($param);
 
                     $doc = "{$tab}/** {$prop->document}  */" ;
                     $name = Utils::uncamelize($prop->name);
@@ -237,7 +245,7 @@ class MarkdownGenerator implements IDocGenerator
                 }
 
                 if($prop->type ==='object[]'){
-                    $this->getTsTypeDefine($prop);
+                    //$this->getTsTypeDefine($prop);
                     $doc = "{$tab}/** {$prop->document}  */" ;
                     $name = Utils::uncamelize($prop->name);
                     $type = self::toTsInterfaceName($prop->className).'[]';
@@ -264,15 +272,13 @@ class MarkdownGenerator implements IDocGenerator
      * @return string
      */
     private static function transformTsType(string $parameterParserType):string{
-        return match ($parameterParserType){
-            'string'=>'string',
-            'float','int'=>'number',
+        $tsReplaceMap = [
             'bool'=>'boolean',
-            'int[]','float[]'=>"number[]",
-            'bool[]'=>"bool[]",
-            'string[]'=>"string[]",
-            '[]'=>'[],'
-        };
+            'float'=>'number',
+            'int'=>'number',
+        ];
+
+        return strtr($parameterParserType,$tsReplaceMap);
     }
 
     /**
@@ -313,11 +319,11 @@ class MarkdownGenerator implements IDocGenerator
                     $mock[$keyName] = $info->doc?:'';
                 }
                 if('array'===$info->typeName){
-                    if(Utils::isScalar($info->arrayType)){
+                    if(!$info->arrayType?->isObjectArray()){
                         $mock[$keyName] = $info->doc?[$info->doc]:[];
                     }else{
                         $mock[$keyName] = [];
-                        $mock[$keyName] = [$this->getJson($info->arrayType,$mock[$keyName])];
+                        $mock[$keyName] = [$this->getJson($info->arrayType->class,$mock[$keyName])];
                     }
 
                 }

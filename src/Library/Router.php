@@ -2,11 +2,12 @@
 
 namespace LaravelNemo\Library;
 
+use JetBrains\PhpStorm\ArrayShape;
 use LaravelNemo\AttributeClass\ArrayShapeConst;
 use LaravelNemo\Exceptions\App\HttpForbiddenException;
 use LaravelNemo\Exceptions\App\HttpNotFoundException;
 use LaravelNemo\Exceptions\App\ParamsException;
-use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\Nemo;
 
 class Router
@@ -127,7 +128,6 @@ class Router
      */
     protected static function checkParamType(string $typeName, string $paramName, &$value): void
     {
-
         switch ($typeName) {
             case 'string':
                 if (!is_string($value) &&

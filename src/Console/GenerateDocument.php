@@ -58,12 +58,16 @@ class GenerateDocument extends Command
             return $this->error("配置错误:{$docDir}目录不存在");
         }
 
+
         $fileData = File::allFiles($docDir);
         $documents = [];
         foreach ($fileData as $fileInfo){
-            $parser = new ControllerParser($fileInfo->getRealPath(),$module[$name]['prefix']??'',$module[$name]['path_separator']??"/");
-            $document =  $parser->init()->parser();
-            $document &&  $documents = [...$documents,...$document];
+            if(str_ends_with('Controller.php',$fileInfo->getFilename())){
+                $parser = new ControllerParser($fileInfo->getRealPath(),$module[$name]['prefix']??'',$module[$name]['path_separator']??"/");
+                $document =  $parser->init()->parser();
+                $document &&  $documents = [...$documents,...$document];
+            }
+
         }
 
         $documents = $this->documentsSort($documents);

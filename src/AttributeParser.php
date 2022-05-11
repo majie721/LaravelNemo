@@ -3,11 +3,11 @@
 namespace LaravelNemo;
 
 use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\AttributeClass\ArrayShapeConst;
 use LaravelNemo\AttributeClass\Decorator;
 use LaravelNemo\AttributeClass\Doc;
 use LaravelNemo\AttributeClass\Enum;
-use function PHPUnit\Framework\callback;
 
 class AttributeParser
 {
@@ -50,16 +50,16 @@ class AttributeParser
 
     /**
      * 解析数组类型的注解
-     * @return mixed|string
+     * @return ArrayInfo|null
      */
     public function getArrayType(){
-        $data =  $this->attributesData[ArrayShape::class]??'';
+        $data =  $this->attributesData[ArrayInfo::class]??'';
         if($data){
-            $arguments = $data['attribute'][0]->getArguments();
-            return $arguments[0][0]??''; //todo 待优化
+            $arguments = $data['attribute'][0]->newInstance();
+            return $arguments; //todo 待优化
         }
 
-        return '';
+        return null;
     }
 
     /**

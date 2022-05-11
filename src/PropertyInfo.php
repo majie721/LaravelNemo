@@ -3,6 +3,7 @@
 namespace LaravelNemo;
 
 use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\AttributeClass\ArrayShapeConst;
 
 class PropertyInfo
@@ -22,10 +23,10 @@ class PropertyInfo
     /** @var bool 是否可空 */
     public bool $allowsNull;
 
-    /** @var string  */
-    public mixed $arrayType;
+    /** @var ?ArrayInfo  */
+    public ?ArrayInfo $arrayType;
 
-    /** @var bool 是否标量类型: int,string,bool,float,int[],string[],bool[],float[]*/
+    /** @var bool 是否标量类型: 非对象或者对象数组*/
     public bool $isBuiltin;
 
     /** @var string 文档注释 */
@@ -35,7 +36,7 @@ class PropertyInfo
     public bool $option = false;
 
     /** @var array 枚举值 */
-    #[ArrayShape(ArrayShapeConst::enumInfoArrayShape)]
+    #[ArrayShape('ArrayShapeConst[]',ArrayShapeConst::enumInfoArrayShape)]
     public array $enumInfo = [];
 
     /** @var string 类名 */

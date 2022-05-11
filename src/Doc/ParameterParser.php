@@ -3,7 +3,7 @@
 namespace LaravelNemo\Doc;
 
 
-use JetBrains\PhpStorm\ArrayShape;
+use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\AttributeClass\Doc;
 use LaravelNemo\AttributeClass\Enum;
 use LaravelNemo\Exceptions\DocumentPropertyError;
@@ -56,22 +56,21 @@ class ParameterParser extends DocParser
                 return $this->setParseTypeData($type, [], true, $parameter, true,1);
             }
 
-            if ('array' === $type) {//数组可以根据ArrayShape注解解析
-                $attributes = $parameter->getAttributes(ArrayShape::class);
+            if ('array' === $type) {//数组可以根据ArrayInfo注解解析
+                $attributes = $parameter->getAttributes(ArrayInfo::class);
+                /** @var ArrayInfo $arrayInfo */
+                $arrayInfo = $attributes[0]->newInstance();
+                $type = $arrayInfo->type;
                 if (empty($attributes)) {
                     return $this->setParseTypeData('[]', [], true, $parameter,false,0);
                 }
 
-                $typeInArrayShape = $attributes[0]->getName();
-                if (Utils::isScalar($typeInArrayShape)) {
-                    $type = "{$typeInArrayShape}[]";
+                if (!$arrayInfo->isObjectArray()) {
                     return $this->setParseTypeData($type, [], true, $parameter,false,0);
                 }
-                $typeInArrayShape = $attributes[0]->getName();
-                $type = "{$typeInArrayShape}[]";
 
-                $child = $this->parserClassType($typeInArrayShape,  1);
-                return $this->setParseTypeData($type, $child, false, $parameter,false,0)->setClassName($typeInArrayShape);
+                $child = $this->parserClassType($arrayInfo->class,  1);
+                return $this->setParseTypeData($type, $child, false, $parameter,false,0)->setClassName($arrayInfo->class);
             }
 
             //对象
@@ -109,7 +108,7 @@ class ParameterParser extends DocParser
         $this->isEnum = !empty($parameter->getAttributes(Enum::class));
         $this->isQueryParam = $isQueryPara;
         $this->isRequired = !($this->hasDefaultValue || $parameter->allowsNull() || $docData?->getOption());
-        $this->child = [];
+        //$this->child = [];
         !is_null($depth) && $this->depth = $depth;
         $this->enumData = $this->isEnum ? json_encode($parameter->getAttributes(Enum::class)[0]->newInstance()->getEnumInfo(), JSON_THROW_ON_ERROR) : '';
 
@@ -159,8 +158,8 @@ class ParameterParser extends DocParser
                     }
                     //对象数组
                     $instance = $this->newObjectArray($datum, $depth);
-                    $instance->className = $datum->arrayType;
-                    $instance->child = $this->parserClassType($datum->arrayType, $depth + 1);
+                    $instance->className = $datum->arrayType->class;
+                    $instance->child = $this->parserClassType($datum->arrayType->class, $depth + 1);
                     $properties[] = $instance;
                     continue;
                 }
@@ -245,7 +244,7 @@ class ParameterParser extends DocParser
         $instance->name = Utils::uncamelize($info->name);
         $instance->type = match ($type) {
             'scalar' => $info->typeName,
-            'array' => "{$info->arrayType}[]",
+            'array' => $info->arrayType->type,
             'object' => 'object',
             'object[]' => $type,
         };
