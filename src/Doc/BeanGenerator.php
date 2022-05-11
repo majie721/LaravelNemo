@@ -2,8 +2,8 @@
 
 namespace LaravelNemo\Doc;
 
-use App\Http\Nemo\Controllers\Beans\ClassBean;
-use App\Http\Nemo\Controllers\Beans\PropertyInfo;
+use LaravelNemo\Front\Controllers\Beans\ClassBean;
+use LaravelNemo\Front\Controllers\Beans\PropertyInfo;
 use LaravelNemo\Interface\IDocGenerator;
 
 class BeanGenerator implements IDocGenerator

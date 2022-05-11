@@ -20,6 +20,12 @@
 
 return [
     'route'=>[
+        'nemo' => [
+            'name'=>'nemo',
+            'prefix' => 'nemo',
+            'namespace'=>'App\Http\Api\Controllers',
+            'separator'=>'_'
+        ],
         'web' => [
             'name'=>'web',
             'prefix' => '',

@@ -26,5 +26,9 @@ class NemoServiceProvider extends \Illuminate\Support\ServiceProvider
                 GenerateDocument::class,
             ]);
         }
+
+        $this->loadRoutesFrom(__DIR__.'/Front/routes/nemo.php');
+
+        $this->loadViewsFrom(__DIR__.'/Front/dist/', 'nemoView');
     }
 }
