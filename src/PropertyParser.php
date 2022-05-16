@@ -92,9 +92,12 @@ class PropertyParser
 
     public function arrayFill(array &$dataList,string $class){
         foreach ($dataList as &$item){
-            if(array_is_list($item)){
+            if(is_array($item) && array_is_list($item)){
                 $this->arrayFill($class,$item);
             }else{
+                if(is_object($item)){
+                    $item = json_decode(json_encode($item),true);
+                }
                 $item &&  $item = $this->recursionFill($class,$item);
             }
         }
