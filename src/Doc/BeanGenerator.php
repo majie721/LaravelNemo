@@ -18,7 +18,6 @@ class BeanGenerator implements IDocGenerator
     }
 
     public function generate():FileStore{
-        $filename = $this->classInfo->className;
 
         $lines = [];
         $headerLines[] = '<?php';
