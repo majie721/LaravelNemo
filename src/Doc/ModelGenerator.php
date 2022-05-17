@@ -15,7 +15,7 @@ class ModelGenerator implements IDocGenerator
     /**
      * @param Table $tableInfo
      */
-    public function __construct(public Table $tableInfo){
+    public function __construct(public Table $tableInfo,public $namespace='namespace App\Models'){
 
     }
 
@@ -25,7 +25,7 @@ class ModelGenerator implements IDocGenerator
         $lines = [];
         $headerLines[] = '<?php';
         $headerLines[] = '';
-        $headerLines[] = "namespace App\Models;";
+        $headerLines[] = "{$this->namespace};";
         $headerLines[] = "";
         $useLines[] = "use Illuminate\Database\Eloquent\Model;";
         $lines[] = "";
@@ -49,7 +49,7 @@ class ModelGenerator implements IDocGenerator
     private function propertyLines(){
         $content = [];
         $tab = $this->tab();
-        $content[] =  $tab."protected \$table = '{$this->tableInfo->table}'";
+        $content[] =  $tab."protected \$table = '{$this->tableInfo->table}';";
 
         foreach ($this->tableInfo->columns as $column){
             if($column->is_primary){

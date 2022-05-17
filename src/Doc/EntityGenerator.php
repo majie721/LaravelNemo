@@ -17,7 +17,7 @@ class EntityGenerator implements IDocGenerator
     /**
      * @param Table $tableInfo
      */
-    public function __construct(public Table $tableInfo){
+    public function __construct(public Table $tableInfo,public $namespace='namespace App\Entities'){
 
     }
 
@@ -28,12 +28,12 @@ class EntityGenerator implements IDocGenerator
         $lines = [];
         $headerLines[] = '<?php';
         $headerLines[] = '';
-        $headerLines[] = "namespace App\Entities;";
+        $headerLines[] = "{$this->namespace};";
         $headerLines[] = "";
         $useLines[] = "use LaravelNemo\AttributeClass\Doc;";
         $useLines[] = "use LaravelNemo\Nemo;";
         $lines[] = "";
-        $lines[] = "class {$this->classInfo->className}Entity extends Nemo";
+        $lines[] = "class {$class}Entity extends Nemo";
         $lines[] = "{";
         $propertyLines = [];
         foreach ($this->tableInfo->columns as $column){
@@ -56,17 +56,17 @@ class EntityGenerator implements IDocGenerator
     private function propertyLines(Columns $column,&$useLines){
         $content = [];
         $tab = $this->tab();
-        $phpType = $this->getPhpType($column->type);
+        $type = $this->getPhpType($column->type);
         $nullable = !!$column->nullable;
-        $nullable && $phpType = "$phpType|null";
+        $phpType =  $nullable?"$type|null":$type;
         $remark =  $column->nullable? "nullable[yes]":"nullable[no],";
         $remark .=  "type[{$column->type}]";
         if($column->default !==null){
             $remark .=",default['{$column->default}']";
         }
         $content[] = "{$tab}/** @var $phpType {$column->comment}($remark) */";
-        $content[] =$column->nullable?"{$tab}#[Doc('{$column->comment}')]":"{$tab}#[Doc('{$column->desc}',false)]";
-        $nullable &&  $phpType = "?$phpType";
+        $content[] =$column->nullable?"{$tab}#[Doc('{$column->comment}',true)]":"{$tab}#[Doc('{$column->comment}')]";
+        $nullable &&  $phpType = "?$type";
         $content[] ="{$tab}public {$phpType} \${$column->column};";
         $content[] = '';
 

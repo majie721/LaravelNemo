@@ -13,6 +13,7 @@ use LaravelNemo\Front\Service\GenerateService;
 use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\Doc\BeanGenerator;
 use LaravelNemo\Doc\EldGenerator;
+use LaravelNemo\Library\Utils;
 use function Composer\Autoload\includeFile;
 
 class ToolsController extends BaseController
@@ -50,12 +51,10 @@ class ToolsController extends BaseController
         return $this->response(['files'=>$files]);
     }
 
-    public function tables(){
-
-        $res = Order::find(1)->get()->toArray();
-        dd($res);
-
-        $res = DB::select("select  TABLE_NAME `table`,COLUMN_NAME  `column`,COLUMN_DEFAULT  `default`,IF(IS_NULLABLE='YES',1,0) nullable,COLUMN_TYPE type,if(COLUMN_KEY = 'PRI',1,0) is_primary,COLUMN_COMMENT comment   from information_schema.COLUMNS  where table_schema  = ?",['test_2']);
+    public function tables($table_schema = ''){
+        $connections =  config('database.connections');
+        $table_schema = $table_schema? $connections[$table_schema]['database']:($connections[config('database.default')]['database']);
+        $res = DB::select("select  TABLE_NAME `table`,COLUMN_NAME  `column`,COLUMN_DEFAULT  `default`,IF(IS_NULLABLE='YES',1,0) nullable,COLUMN_TYPE type,if(COLUMN_KEY = 'PRI',1,0) is_primary,COLUMN_COMMENT comment   from information_schema.COLUMNS  where table_schema  = ? order by `table`",[$table_schema]);
         $res =  collect($res)->groupBy('table')->toArray();
         $list = [];
         foreach ($res as $table=>$data){
@@ -64,23 +63,41 @@ class ToolsController extends BaseController
                 'columns'=>$data
             ];
         }
-        return $this->response($list);
+        return $this->response(['list'=>$list,'connections'=>$this->connections(),'default'=>config('database.default')]);
     }
 
 
-    public function modelGen(TableReq $data){
+    public function createEntity(TableReq $data){
         $files = [];
+        $modelNamespace = $data->modelNamespace;
+        $entityNamespace = $data->entityNamespace;
         foreach ($data->list as $item){
-            $path =  storage_path('Models');
-            (new ModelGenerator($item))->generate()->store($path,true);
+            $class = Utils::camelize($item->table);
+            $path =  storage_path('Models'.DIRECTORY_SEPARATOR.$class);
+            (new ModelGenerator($item,$modelNamespace))->generate()->store($path,true);
             $files['Models'][] = $path;
 
-            $path =  storage_path('Entities');
-            (new EntityGenerator($item))->generate()->store($path,true);
+            $path =  storage_path('Entities'.DIRECTORY_SEPARATOR.$class."Entity");
+            (new EntityGenerator($item,$entityNamespace))->generate()->store($path,true);
             $files['Entities'][] = $path;
         }
 
         return $this->response(['files'=>$files]);
+    }
+
+
+    public function connections(){
+        $list = [];
+        $connections =  config('database.connections');
+        foreach ($connections as $connection=>$info){
+            if($info['driver'] ==='mysql'){
+                $list[] = [
+                    'connection'=>$connection,
+                    'name'=>$info['database']
+                ];
+            }
+        }
+        return $list;
     }
 
 
