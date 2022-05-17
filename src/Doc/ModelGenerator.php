@@ -53,7 +53,7 @@ class ModelGenerator implements IDocGenerator
 
         foreach ($this->tableInfo->columns as $column){
             if($column->is_primary){
-                $content[] =  $tab."protected \$primaryKey = '{$column->column}';";
+                $column->column !='id' && $content[] =  $tab."protected \$primaryKey = '{$column->column}';";
                 if(!str_contains($column->type,'int')){
                     $content[] = "protected \$keyType = 'string';";
                     $content[] = "public \$incrementing = false;";

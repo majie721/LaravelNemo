@@ -5,8 +5,8 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nemo Tools</title>
-    <script type="module" crossorigin src="/assets/index.52a1276f.js"></script>
-    <link rel="stylesheet" href="/assets/index.54b263ca.css">
+    <script type="module" crossorigin src="/assets/index.e2f3d771.js"></script>
+    <link rel="stylesheet" href="/assets/index.abb743ee.css">
   </head>
   <body>
     <div id="app"></div>
