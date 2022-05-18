@@ -24,7 +24,18 @@ Route::prefix('')->group(function (){
 2.JSON Mode可以根据json 数据生成数据模型
 3 Table Mode可以更具larval配置的数据库(mysql) 生成Model以及对应的Entity
 
-##2. LaravelNemo artisan
+##3. LaravelNemo api接口文档(api接口说明和前端ts请求/响应的数据类型)
+php artisan generate:document
+
+
+##4.注解说明
+#[ApiDoc("订单",'创建订单',OR)] ---   接口文档说明(请求参数根据)
+
+
+
+
+
+ 
 
 
 
