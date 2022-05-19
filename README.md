@@ -4,10 +4,10 @@
 
 
 ##1.安装 
-* composer require majie/laravel-nemo
-* php artisan  vendor:publish  --tag=nemo --force
-* nemo路由配置 config/nemo.php 更改rout对应的命名空间
-* 将laravle的路由改成动态路由,eg /routes/web.php
+* 1.1 composer require majie/laravel-nemo
+* 1.2 使用命令发布配置和前端资源:  php artisan  vendor:publish  --tag=nemo --force
+* 1.3 nemo路由配置 config/nemo.php 更改rout对应的命名空间
+* 1.4 将laravle的路由改成动态路由,eg /routes/web.php
 ```
 
 Route::prefix('')->group(function (){
@@ -26,10 +26,37 @@ Route::prefix('')->group(function (){
 
 ##3. LaravelNemo api接口文档(api接口说明和前端ts请求/响应的数据类型)
 php artisan generate:document
+##3.1.注解接口说明
+ * ArrayInfo注解解析对象数组属性,对象里数组属性会根据ArrayInfo填充,api文档也会识别数组类型(数组为多维数组时,type参数用来补充说明);eg:
+ * Doc注解解释说明对象属性的解释,它有第二字段标识字段是否可选 Doc('订单商品信息') 
+ ```
+  ....
+   /** 订单商品信息 */
+    #[Doc('订单商品信息')]
+    #[ArrayInfo(ProductItem::class)]
+    public array $products;
+ 
+ ```
+  *Decorator注解 用来当做属性的装饰器,在填充对象时会执行装饰器里的函数
+  ```
+    #[Doc('姓名')]
+    #[Decorator('strtolower')]
+    public string $name;
+  ```
+  
+  *Enum注解用来解释枚举数据
 
+ 
+ *ApiDoc注解用来解释控制器里接口,在生成api文档时会根据ApiDoc生成文档  eg IndexController 控制器Action 
+  ``` TestController.php
+    /** 订单创建接口 */
+    #[ApiDoc("订单",'创建订单',PlatformOrderResp::class)]
+    public function create(Order $order){
+       // ..todo
+    }
+ ```
+ 
 
-##4.注解说明
-#[ApiDoc("订单",'创建订单',OR)] ---   接口文档说明(请求参数根据)
 
 
 
