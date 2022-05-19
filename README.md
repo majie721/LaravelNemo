@@ -10,7 +10,7 @@
 
 
 > 数据类型需要继承LaravelNemo\Nemo;
-> 自定义枚举类型需要继承
+> 自定义枚举类型需要实现 implements \ArrayAccess, 可以引入use EnumArrayAccessTrait,EnumTrait;
 
 
 
