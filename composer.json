@@ -18,7 +18,8 @@
         "erusev/parsedown": "^1.7"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.10"
+        "phpunit/phpunit": "^9.5.10",
+        "barryvdh/laravel-debugbar": "^3.6"
     },
     "autoload-dev": {
         "psr-4": {
@@ -29,7 +30,10 @@
         "laravel": {
             "providers": [
               "LaravelNemo\\NemoServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "ApiResponse":"\\App\\Library\\Http\\WebResponse"
+            }
         }
     }
 }

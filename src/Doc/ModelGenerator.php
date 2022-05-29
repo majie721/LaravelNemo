@@ -15,17 +15,16 @@ class ModelGenerator implements IDocGenerator
     /**
      * @param Table $tableInfo
      */
-    public function __construct(public Table $tableInfo){
+    public function __construct(public Table $tableInfo,public string $class ,public $namespace='namespace App\Models'){
 
     }
 
     public function generate():FileStore{
-        $class = Utils::camelize($this->tableInfo->table);
-
+        $class = $this->class;
         $lines = [];
         $headerLines[] = '<?php';
         $headerLines[] = '';
-        $headerLines[] = "namespace App\Models;";
+        $headerLines[] = "namespace {$this->namespace};";
         $headerLines[] = "";
         $useLines[] = "use Illuminate\Database\Eloquent\Model;";
         $lines[] = "";
@@ -49,11 +48,11 @@ class ModelGenerator implements IDocGenerator
     private function propertyLines(){
         $content = [];
         $tab = $this->tab();
-        $content[] =  $tab."protected \$table = '{$this->tableInfo->table}'";
+        $content[] =  $tab."protected \$table = '{$this->tableInfo->table}';";
 
         foreach ($this->tableInfo->columns as $column){
             if($column->is_primary){
-                $content[] =  $tab."protected \$primaryKey = '{$column->column}';";
+                $column->column !='id' && $content[] =  $tab."protected \$primaryKey = '{$column->column}';";
                 if(!str_contains($column->type,'int')){
                     $content[] = "protected \$keyType = 'string';";
                     $content[] = "public \$incrementing = false;";

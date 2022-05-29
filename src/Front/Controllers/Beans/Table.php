@@ -17,5 +17,16 @@ class Table extends Nemo
     #[Doc('字段信息')]
     public array $columns;
 
+    #[Doc('bean namespance')]
+    public string $beanNamespace = 'App\Http\Admin\Beans\Menu';
+
+    #[Doc('列表查询条件字段')]
+    #[ArrayInfo('string')]
+    public array  $queryColumns = ["*"];
+
+    /** @var MethodInfo[]  */
+    #[Doc('需要添加的方法')]
+    #[ArrayInfo(MethodInfo::class)]
+    public array $methods = [];
 
 }

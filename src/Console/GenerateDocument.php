@@ -16,7 +16,7 @@ class GenerateDocument extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:document {name}';
+    protected $signature = 'generate:document';
 
     /**
      * The console command description.
@@ -39,6 +39,8 @@ class GenerateDocument extends Command
         }
 
         $choice = array_keys($module);
+        $choice =  array_values(array_filter($choice,function ($val){ return $val !=='nemo';}));
+
 
         $name = $this->choice(
             '选择待生成文档的模块',
@@ -62,7 +64,7 @@ class GenerateDocument extends Command
         $fileData = File::allFiles($docDir);
         $documents = [];
         foreach ($fileData as $fileInfo){
-            if(str_ends_with('Controller.php',$fileInfo->getFilename())){
+            if(str_ends_with($fileInfo->getFilename(),'Controller.php')){
                 $parser = new ControllerParser($fileInfo->getRealPath(),$module[$name]['prefix']??'',$module[$name]['path_separator']??"/");
                 $document =  $parser->init()->parser();
                 $document &&  $documents = [...$documents,...$document];

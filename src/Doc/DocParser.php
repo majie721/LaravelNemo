@@ -4,6 +4,8 @@ namespace LaravelNemo\Doc;
 
 abstract class DocParser
 {
+    /** @var array 已经解析过的class */
+    public static $hasParsed = [];
 
     /** @var string 参数名称(前端蛇形,php小驼峰) */
     public string $name;

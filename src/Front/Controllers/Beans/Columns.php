@@ -15,7 +15,7 @@ class Columns extends Nemo
     public string $column;
 
     #[Doc('默认值')]
-    public string $default;
+    public ?string $default;
 
     #[Doc('是否可空')]
     public int $nullable;
@@ -27,7 +27,7 @@ class Columns extends Nemo
     public int $is_primary;
 
     #[Doc('字段注释')]
-    public string $comment;
+    public ?string $comment;
 
 
 }

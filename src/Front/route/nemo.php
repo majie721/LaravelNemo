@@ -14,7 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::prefix('nemo')->middleware([])->group(function (){
+    Route::get('/',static function(){
+       return redirect('/nemo/tools/index');
+    });
+
     $config =  config('nemo.route.nemo',[]);
     Route::any('{controller}/{action}', static function ($controller, $action)use ($config){
         return \LaravelNemo\Library\Router::dispatchRoute($controller,$action,$config);

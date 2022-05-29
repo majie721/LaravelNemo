@@ -89,12 +89,12 @@ class MarkdownGenerator implements IDocGenerator
                 $lines[] = "```";
 
 
-                $lines[] = "#### {$apiIndex}.6 TypeScript 请求示例";
+                $lines[] = "#### {$apiIndex}.6请求示例";
                 $lines[] = "```json";
                 $lines[] = empty($bodyParam)?'{}':$this->getRequestJson($bodyParam);
                 $lines[] = "```";
 
-                $lines[] = "#### {$apiIndex}.7 TypeScript 响应示例";
+                $lines[] = "#### {$apiIndex}.7响应示例";
                 $lines[] = "```json";
                 $lines[] = empty($doc->response)?'{}':$this->getResponseJson($doc->response);
                 $lines[] = "```";
