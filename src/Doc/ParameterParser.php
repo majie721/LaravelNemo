@@ -10,6 +10,7 @@ use LaravelNemo\Exceptions\DocumentPropertyError;
 use LaravelNemo\Library\Utils;
 use LaravelNemo\PropertyInfo;
 use LaravelNemo\Nemo;
+use LaravelNemo\PropertyParser;
 
 class ParameterParser extends DocParser
 {
@@ -130,6 +131,13 @@ class ParameterParser extends DocParser
             $cameName = Utils::camelize($this->name);
             throw new \RuntimeException("{$cameName}#{$className} 不存在");
         }
+
+        if(isset(self::$hasParsed[$className])){ //已经解析过的class直接返回,避免递归死循环
+            return self::$hasParsed[$className];
+        }else{
+            self::$hasParsed[$className] = [];
+        }
+
         $properties = [];
         $instance = (new \ReflectionClass($className))->newInstance(null);
         if ($instance instanceof Nemo) {
@@ -174,6 +182,7 @@ class ParameterParser extends DocParser
                 throw new \RuntimeException("{$className}的{$key}属性异常");
             }
 
+            self::$hasParsed[$className] = $properties;
             return $properties;
         }
 

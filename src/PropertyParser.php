@@ -95,6 +95,7 @@ class PropertyParser
             if(is_array($item) && array_is_list($item)){
                 $this->arrayFill($class,$item);
             }else{
+
                 if(is_object($item)){
                     $item = json_decode(json_encode($item),true);
                 }

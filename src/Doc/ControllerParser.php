@@ -23,7 +23,8 @@ class ControllerParser
      * @throws \RuntimeException
      */
     public function __construct(public string  $filePath,
-                                private string $separator)
+                                private string $prefix,
+                                private string $separator = '/')
     {
         if (!file_exists($filePath)) {
             throw new \RuntimeException('文件路径不存在');
@@ -60,7 +61,7 @@ class ControllerParser
     }
 
     /**
-     * @return array
+     * @return ControllerDoc[]
      * @throws \ReflectionException
      */
     public function parser():array
@@ -87,12 +88,14 @@ class ControllerParser
             $methodName = $method->getName();
             $attributeData = $apiDocAttribute[0]->newInstance();
             $params = $method->getParameters();
-            $uri = "{$uriPath}/$methodName";
+
+
             $paramData =  $this->processParams($params,$methodName,$uri);
 
             $response  = $this->processResponse($attributeData->response,$methodName);
 
             $methodName = Utils::uncamelize($methodName);
+            $uri = "{$uriPath}/$methodName";
             $document = new ControllerDoc();
             $document->name         = $methodName;
             $document->module       = $attributeData->module;
@@ -123,7 +126,7 @@ class ControllerParser
             $path = trim("{$match[1]}\\{$match[2]}", '\\');
 
             $arr = array_map([Utils::class, 'uncamelize'], explode('\\', $path));
-            return implode($separator, $arr);
+            return $this->prefix."/".implode($separator, $arr);
         }
 
         return '';

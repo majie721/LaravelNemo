@@ -15,17 +15,16 @@ class ModelGenerator implements IDocGenerator
     /**
      * @param Table $tableInfo
      */
-    public function __construct(public Table $tableInfo,public $namespace='namespace App\Models'){
+    public function __construct(public Table $tableInfo,public string $class ,public $namespace='namespace App\Models'){
 
     }
 
     public function generate():FileStore{
-        $class = Utils::camelize($this->tableInfo->table);
-
+        $class = $this->class;
         $lines = [];
         $headerLines[] = '<?php';
         $headerLines[] = '';
-        $headerLines[] = "{$this->namespace};";
+        $headerLines[] = "namespace {$this->namespace};";
         $headerLines[] = "";
         $useLines[] = "use Illuminate\Database\Eloquent\Model;";
         $lines[] = "";

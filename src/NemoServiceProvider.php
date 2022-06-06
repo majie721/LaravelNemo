@@ -3,6 +3,7 @@
 namespace LaravelNemo;
 
 use LaravelNemo\Console\GenerateDocument;
+use LaravelNemo\Library\ApiResponse;
 use function PHPUnit\Framework\fileExists;
 
 class NemoServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -34,5 +35,9 @@ class NemoServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/Front/route/nemo.php');
 
         $this->loadViewsFrom(__DIR__.'/Front/dist/', 'nemoView');
+
+        $this->app->singleton('ApiResponse', function () {
+            return new ApiResponse();
+        });
     }
 }

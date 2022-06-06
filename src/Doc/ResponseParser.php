@@ -65,6 +65,14 @@ class ResponseParser extends DocParser
         if (!class_exists($className)) {
             throw new \RuntimeException("{$this->name}#{$className}不存在");
         }
+
+        if(isset(self::$hasParsed[$className])){ //已经解析过的class直接返回,避免递归死循环
+            return self::$hasParsed[$className];
+        }else{
+            self::$hasParsed[$className] = [];
+        }
+
+
         $properties = [];
         $instance = (new \ReflectionClass($className))->newInstance(null);
         if ($instance instanceof Nemo) {
@@ -105,7 +113,7 @@ class ResponseParser extends DocParser
                 }
                 throw new \RuntimeException("{$className}的{$key}属性异常");
             }
-
+            self::$hasParsed[$className] = $properties;
             return  $properties;
         }
 

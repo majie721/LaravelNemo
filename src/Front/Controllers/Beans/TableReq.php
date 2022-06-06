@@ -12,9 +12,9 @@ class TableReq extends Nemo
     #[ArrayInfo(Table::class)]
     public array $list;
 
-    #[Doc("Model命名空间")]
+    #[Doc("model 鍛藉悕绌洪棿")]
     public string $modelNamespace;
 
-    #[Doc("实体命名空间")]
+    #[Doc("entity 鍛藉悕绌洪棿")]
     public string $entityNamespace;
 }

@@ -4,6 +4,9 @@ namespace LaravelNemo\Front\Controllers;
 
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use LaravelNemo\Doc\AddBeanGenerator;
+use LaravelNemo\Doc\CodeGenerator;
 use LaravelNemo\Doc\EntityGenerator;
 use LaravelNemo\Doc\ModelGenerator;
 use LaravelNemo\Front\Controllers\Beans\ClassBean;
@@ -71,15 +74,31 @@ class ToolsController extends BaseController
         $files = [];
         $modelNamespace = $data->modelNamespace;
         $entityNamespace = $data->entityNamespace;
+
+        /** 先清空目录 */
+        File::cleanDirectory(storage_path('Controllers'));
+        File::cleanDirectory(storage_path('Service'));
+        File::cleanDirectory(storage_path('Models'));
+        File::cleanDirectory(storage_path('Entities'));
+        File::cleanDirectory(storage_path('Beans'));
+
         foreach ($data->list as $item){
             $class = Utils::camelize($item->table);
             $path =  storage_path('Models'.DIRECTORY_SEPARATOR.$class);
-            (new ModelGenerator($item,$modelNamespace))->generate()->store($path,true);
+            (new ModelGenerator($item,$class,$modelNamespace))->generate()->store($path,true);
             $files['Models'][] = $path;
 
+            $entityName = $class.'Entity';
+            $entityClass = $entityNamespace."\\".$entityName;
             $path =  storage_path('Entities'.DIRECTORY_SEPARATOR.$class."Entity");
-            (new EntityGenerator($item,$entityNamespace))->generate()->store($path,true);
+            (new EntityGenerator($item,$entityName,$entityNamespace))->generate()->store($path,true);
             $files['Entities'][] = $path;
+
+            if(!empty($item->methods)){
+                (new CodeGenerator($item,$class,$modelNamespace,$entityClass))->create();
+            }
+
+
         }
 
         return $this->response(['files'=>$files]);
