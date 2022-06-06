@@ -27,6 +27,9 @@ class MethodInfo extends Nemo
     /** @var string api所属模块 */
     public string $apiName='';
 
+    /**  */
+    public bool $selected = false;
+
 
     public function getBeanTypeName(){
         return match ($this->action){

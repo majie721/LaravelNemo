@@ -5,7 +5,7 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nemo Tools</title>
-    <script type="module" crossorigin src="/assets/index.726fda08.js"></script>
+    <script type="module" crossorigin src="/assets/index.bd5615f7.js"></script>
     <link rel="stylesheet" href="/assets/index.48b2c681.css">
   </head>
   <body>

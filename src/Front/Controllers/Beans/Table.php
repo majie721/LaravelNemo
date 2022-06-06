@@ -29,4 +29,13 @@ class Table extends Nemo
     #[ArrayInfo(MethodInfo::class)]
     public array $methods = [];
 
+
+
+    protected function afterFill()
+    {
+        $this->methods = array_filter($this->methods,function ($val){
+            return !!$val->selected;
+        });
+    }
+
 }
