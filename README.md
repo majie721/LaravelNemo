@@ -2,6 +2,17 @@
 
 > php8.1以上 & laravel9以上
 
+> LaravelNemo 功能:1.将请求request data转换成预定义对应的对象 
+> 2.通过注解快速生成前端开发api文档以及前端请求/响应数据的Typescript数据结构 
+> 3.自带数据模型生成工具(根据json或者自定义生成对象模型)
+> 4,根据laravel的数据库配置,一键生成laravel model文件以及和数据库表对应的entity模型
+> 5 对象属性的可以添加装饰器注解,属性变换
+
+
+> 数据类型需要继承LaravelNemo\Nemo;
+> 自定义枚举类型需要实现 implements \ArrayAccess, 可以引入use EnumArrayAccessTrait,EnumTrait;
+
+
 
 ##1.安装 
 * 1.1 composer require majie/laravel-nemo
