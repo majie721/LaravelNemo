@@ -106,10 +106,10 @@ class ServiceGenerator extends BaseCodeGenerator
     public function addContent(): array
     {
         $tab = $this->tab();
-        $lines[] = "{$tab}/**";
-        $lines[] = "{$tab} *@param {$this->paramBeanName} \$bean";
-        $lines[] = "{$tab} *@return {$this->modelName}|\Illuminate\Database\Eloquent\Model";
-        $lines[] = "{$tab} */";
+//        $lines[] = "{$tab}/**";
+//        $lines[] = "{$tab} *@param {$this->paramBeanName} \$bean";
+//        $lines[] = "{$tab} *@return {$this->modelName}|\Illuminate\Database\Eloquent\Model";
+//        $lines[] = "{$tab} */";
         $lines[] = "{$tab}public function {$this->actionName}({$this->paramBeanName} \$bean){";
         $lines[] = "{$tab}{$tab}//todo ...";
         $lines[] = "{$tab}{$tab}return {$this->modelName}::create(\$bean->toArray());";
@@ -120,10 +120,10 @@ class ServiceGenerator extends BaseCodeGenerator
     public function editContent(): array
     {
         $tab = $this->tab();
-        $lines[] = "{$tab}/**";
-        $lines[] = "{$tab} *@param {$this->paramBeanName} \$bean";
-        $lines[] = "{$tab} *@return bool";
-        $lines[] = "{$tab} */";
+//        $lines[] = "{$tab}/**";
+//        $lines[] = "{$tab} *@param {$this->paramBeanName} \$bean";
+//        $lines[] = "{$tab} *@return bool";
+//        $lines[] = "{$tab} */";
         $lines[] = "{$tab}public function {$this->actionName}({$this->paramBeanName} \$bean):bool{";
         $lines[] = "{$tab}{$tab}//todo ...";
         $lines[] = "{$tab}{$tab}return {$this->modelName}::where('id',\$bean->id)->update(\$bean->toArray());";
@@ -135,10 +135,10 @@ class ServiceGenerator extends BaseCodeGenerator
     {
        
         $tab = $this->tab();
-        $lines[] = "{$tab}/**";
-        $lines[] = "{$tab} *@param int \$id";
-        $lines[] = "{$tab} *@return bool|null";
-        $lines[] = "{$tab} */";
+//        $lines[] = "{$tab}/**";
+//        $lines[] = "{$tab} *@param int \$id";
+//        $lines[] = "{$tab} *@return bool|null";
+//        $lines[] = "{$tab} */";
         $lines[] = "{$tab}public function {$this->actionName}(int \$id){";
         $lines[] = "{$tab}{$tab}//todo ...";
         $lines[] = "{$tab}{$tab}return {$this->modelName}::where('id',\$id)->delete();";
