@@ -16,7 +16,7 @@ class GenerateDocument extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:document';
+    protected $signature = 'nemo:document';
 
     /**
      * The console command description.

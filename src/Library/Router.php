@@ -7,11 +7,11 @@ use LaravelNemo\AttributeClass\ArrayShapeConst;
 use LaravelNemo\Exceptions\App\HttpForbiddenException;
 use LaravelNemo\Exceptions\App\HttpNotFoundException;
 use LaravelNemo\Exceptions\App\ParamsException;
-use LaravelNemo\AttributeClass\ArrayInfo;
 use LaravelNemo\Nemo;
 
 class Router
 {
+
     /**
      * @param string $controllerPath
      * @param string $action
@@ -21,7 +21,21 @@ class Router
      * @throws HttpNotFoundException
      * @throws ParamsException
      */
-    public static function dispatchRoute(string $controllerPath, string $action, #[ArrayShape(ArrayShapeConst::ROUTE_CONFIG)] array $config): mixed
+    public static function dispatchDefault(string $controllerPath, string $action, #[ArrayShape(ArrayShapeConst::ROUTE_CONFIG)] array $config): mixed{
+        return self::dispatchRoute($controllerPath,$action,$config,\request()->all());
+    }
+
+    /**
+     * @param string $controllerPath
+     * @param string $action
+     * @param array $config
+     * @param array $requestData
+     * @return mixed
+     * @throws HttpForbiddenException
+     * @throws HttpNotFoundException
+     * @throws ParamsException
+     */
+    private static function dispatchRoute(string $controllerPath, string $action, #[ArrayShape(ArrayShapeConst::ROUTE_CONFIG)] array $config, array $requestData = []): mixed
     {
         $controllerArr = explode('/', $controllerPath);
         foreach ($controllerArr as &$item) {
@@ -54,9 +68,9 @@ class Router
             $type = $parameter->getType()?->getName();
 
             $args[] = match (true) {
-                class_exists($type) => self::matchTypeIsClass($parameter,$type),
-                in_array($type, ['int', 'string', 'bool', 'float', 'array'], true) => self::matchTypeIsNormal($parameter, $paramName, $type),
-                $type === null => self::matchTypeIsNll($parameter, $paramName),
+                class_exists($type) => self::matchTypeIsClass($type,$requestData),
+                in_array($type, ['int', 'string', 'bool', 'float', 'array'], true) => self::matchTypeIsNormal($parameter, $paramName, $type,$requestData),
+                $type === null => self::matchTypeIsNll($parameter, $paramName,$requestData),
                 default => throw new ParamsException("The type of parameter ({$paramName}) is exception.")
             };
         }
@@ -70,12 +84,12 @@ class Router
      * @param \ReflectionParameter $parameter
      * @param string $paramName
      * @param string $type
+     * @param array $requestData
      * @return mixed|null
      * @throws ParamsException
      */
-    private static function matchTypeIsNormal(\ReflectionParameter $parameter, string $paramName, string $type)
+    private static function matchTypeIsNormal(\ReflectionParameter $parameter, string $paramName, string $type,array $requestData): mixed
     {
-        $requestData = \request()->all();
         if (isset($requestData[Utils::uncamelize($paramName)])) { //约定为蛇形前端参数
             self::checkParamType($type, $paramName, $requestData[Utils::uncamelize($paramName)]);
             return $requestData[Utils::uncamelize($paramName)];
@@ -94,15 +108,15 @@ class Router
 
 
     /**
-     * @param \ReflectionParameter $parameter
      * @param string $className
+     * @param array $requestData
      * @return Nemo
      */
-    private static function matchTypeIsClass(\ReflectionParameter $parameter,string $className):Nemo
+    private static function matchTypeIsClass(string $className,array $requestData):Nemo
     {
         $resolvedClass = app($className);
         if ($resolvedClass instanceof Nemo) {
-            $resolvedClass =  $resolvedClass::fromItem(\request()->all());
+            $resolvedClass =  $resolvedClass::fromItem($requestData);
         }
 
         return $resolvedClass;
@@ -111,12 +125,13 @@ class Router
     /**
      * @param \ReflectionParameter $parameter
      * @param string $paramName
+     * @param array $requestData
      * @return mixed|null
      * @throws ParamsException
      */
-    private static function matchTypeIsNll(\ReflectionParameter $parameter, string $paramName): mixed
+    private static function matchTypeIsNll(\ReflectionParameter $parameter, string $paramName,array $requestData): mixed
     {
-        return self::matchTypeIsNormal($parameter, $paramName, 'null');
+        return self::matchTypeIsNormal($parameter, $paramName, 'null',$requestData);
     }
 
     /**

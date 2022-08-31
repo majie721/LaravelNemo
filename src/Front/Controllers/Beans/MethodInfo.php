@@ -53,7 +53,7 @@ class MethodInfo extends Nemo
 
     public function getBeanTypeNamespace(){
         //return rtrim( $this->path,"\\".$this->getBeanTypeName());
-        return rtrim(str_replace("\\".$this->getBeanTypeName(),'',$this->path) );
+        return rtrim(str_replace("\\".$this->getBeanTypeName(),'',$this->path) )."\Beans";
     }
 
     public function getControllerNamespace(){

@@ -3,6 +3,7 @@
 namespace LaravelNemo;
 
 use LaravelNemo\Console\GenerateDocument;
+use LaravelNemo\Console\InitNemo;
 use LaravelNemo\Library\ApiResponse;
 use function PHPUnit\Framework\fileExists;
 
@@ -28,6 +29,7 @@ class NemoServiceProvider extends \Illuminate\Support\ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                InitNemo::class,
                 GenerateDocument::class,
             ]);
         }

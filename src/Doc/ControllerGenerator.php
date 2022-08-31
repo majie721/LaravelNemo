@@ -95,7 +95,7 @@ class ControllerGenerator extends BaseCodeGenerator
             $lines[] = "use {$this->methodInfo->serviceName};";
             $this->paramBeanClass && $lines[] = "use {$this->paramBeanClass};";
             $lines[] = "";
-            $lines[] = "class {$class} extends BaseController";
+            $lines[] = "class {$class}";
             $lines[] = "{";
             $lines[] = "";
             $lines[] = "{$tab}public function __construct(public $serviceName \${$varName}){";

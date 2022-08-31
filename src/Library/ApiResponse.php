@@ -2,13 +2,14 @@
 
 namespace LaravelNemo\Library;
 
+use LaravelNemo\Interface\IResponse;
 use LaravelNemo\Library\App;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ApiResponse
+class ApiResponse implements IResponse
 {
     /**
      * @var array 调试信息
