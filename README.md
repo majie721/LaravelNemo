@@ -66,6 +66,7 @@ php artisan generate:document
  
 
 
+![Snipaste_2022-09-01_15-21-04](https://user-images.githubusercontent.com/20874631/187856050-8f6e6b32-fed8-405c-8e7c-8a638d4a4cae.png)
 
 
 
