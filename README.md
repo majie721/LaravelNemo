@@ -13,7 +13,8 @@
 ##1.安装 
 * 1.1 composer require majie/laravel-nemo
 * 1.2 nemo路由配置 config/nemo.php 更改rout对应的命名空间
-* 1.3 将laravle的路由改成动态路由,eg: /routes/web.php
+* 1.3 注意一定要将\app\Http\Kernel.php文件\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class这行代码注释掉
+* 1.4 将laravle的路由改成动态路由,eg: /routes/web.php
 ```
 <?php
 
