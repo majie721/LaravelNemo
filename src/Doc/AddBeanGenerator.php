@@ -35,7 +35,7 @@ class AddBeanGenerator extends BaseCodeGenerator
         $headerLines[] = "namespace {$this->namespace};";
         $headerLines[] = "";
         $useLines[] = "use LaravelNemo\AttributeClass\Doc;";
-        $useLines[] = "use App\Beans\BaseRequest;";
+        $useLines[] = "use LaravelNemo\Library\BaseRequest;";
         $lines[] = "";
         $lines[] = "class {$class} extends BaseRequest";
         $lines[] = "{";

@@ -90,9 +90,6 @@ class ServiceGenerator extends BaseCodeGenerator
             $lines[] = "";
         }
 
-        if($this->methodInfo->action==='delete'){
-
-        }
         $codeLines = $this->{"{$this->methodInfo->action}Content"}();
         $lines = [...$lines, ...$codeLines];
         $lines[] = '';
@@ -133,7 +130,7 @@ class ServiceGenerator extends BaseCodeGenerator
 
     public function deleteContent(): array
     {
-       
+
         $tab = $this->tab();
 //        $lines[] = "{$tab}/**";
 //        $lines[] = "{$tab} *@param int \$id";

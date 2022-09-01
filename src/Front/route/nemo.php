@@ -22,6 +22,6 @@ Route::prefix('nemo')->middleware([])->group(function (){
 
     $config =  config('nemo.route.nemo',[]);
     Route::any('{controller}/{action}', static function ($controller, $action)use ($config){
-        return \LaravelNemo\Library\Router::dispatchRoute($controller,$action,$config);
+        return \LaravelNemo\Library\Router::dispatchDefault($controller,$action,$config);
     })->where('controller','.*');
 });

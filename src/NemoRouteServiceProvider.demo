@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
+
+class RouteServiceProvider extends ServiceProvider
+{
+    /**
+     * The path to the "home" route for your application.
+     *
+     * This is used by Laravel authentication to redirect users after login.
+     *
+     * @var string
+     */
+    public const HOME = '/home';
+
+
+    /**
+     * Define your route model bindings, pattern filters, etc.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->routes(function () {
+            $routes = config('nemo.route');
+            foreach ($routes as $config) {
+                $route = Route::prefix($config['prefix'] ?? '');
+                isset($config['middleware']) && $route->middleware($config['middleware']);
+                isset($config['namespace']) && $route->namespace($config['namespace']);
+                isset($config['path']) && $route->group($config['path']);
+            }
+        });
+    }
+
+}
