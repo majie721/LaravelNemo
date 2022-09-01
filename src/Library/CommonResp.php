@@ -15,7 +15,7 @@ class CommonResp
     public string $message;
 
     /** @var string 响应id */
-    public string $resp_sn;
+    public string $request_id;
 
     public array $debug = [];
 

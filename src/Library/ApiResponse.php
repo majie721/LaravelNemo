@@ -20,7 +20,7 @@ class ApiResponse implements IResponse
     protected array $data;
 
     /** @var string 编号 */
-    protected string $resp_sn = '';
+    protected string $request_id = '';
 
 
     public function setDebug(array $debug): self
@@ -29,10 +29,15 @@ class ApiResponse implements IResponse
         return $this;
     }
 
-    public function resp_sn(string $sn=''): self
+    public function setRequestId(string $str=''): self
     {
-        $this->resp_sn = $sn;
+        $this->request_id = $str;
         return $this;
+    }
+
+    public function getRequestId(): string
+    {
+       return Utils::uniqueId();
     }
 
     /**
@@ -67,8 +72,8 @@ class ApiResponse implements IResponse
         $resp->code = $code;
         $resp->message = $msg;
         $resp->data = $data;
-        $resp->resp_sn = $this->resp_sn ?: strtoupper(Str::random(5));
-        $resp->timestamp = time();
+        $resp->request_id = $this->getRequestId();
+
 
         //如果不是线上环境, 显示调试信息
         if (App::isDebug()) {

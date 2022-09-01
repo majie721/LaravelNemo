@@ -1,6 +1,9 @@
 <?php
 
 namespace LaravelNemo\Interface;
+use \Illuminate\Http\JsonResponse;
+
+
 interface IResponse
 {
     /**
@@ -8,7 +11,7 @@ interface IResponse
      * @param $debug
      * @return $this
      */
-    public function setDebug($debug): self;
+    public function setDebug(array $debug): self;
 
     /**
      * 返回成功

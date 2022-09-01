@@ -1,6 +1,8 @@
 <?php
 namespace LaravelNemo\Library;
 
+use Illuminate\Support\Str;
+
 class Utils
 {
     /**
@@ -58,6 +60,26 @@ class Utils
     public static function uncamelize(string $camelCaps, string $separator = '_'): string
     {
         return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
+    }
+
+
+    /**
+     * @return mixed|null
+     */
+    public static function uniqueId()
+    {
+        return Container::get('NEMO_UNIQUE_ID', function () {
+            return  sprintf("%s%s",(new \DateTime())->format('YmdHisu'),strtoupper(Str::random(6)));
+        });
+    }
+
+
+    /**
+     * @return void
+     */
+    public static function resetUniqueId(): void
+    {
+        Container::unset('NEMO_UNIQUE_ID');
     }
 
 }
