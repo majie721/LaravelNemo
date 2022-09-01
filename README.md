@@ -9,31 +9,28 @@
 > 5 对象属性的可以添加装饰器注解,属性变换
 
 
-> 数据类型需要继承LaravelNemo\Nemo;
-> 自定义枚举类型需要实现 implements \ArrayAccess, 可以引入use EnumArrayAccessTrait,EnumTrait;
-
-
 
 ##1.安装 
 * 1.1 composer require majie/laravel-nemo
-* 1.2 使用命令发布配置和前端资源:  php artisan  vendor:publish  --tag=nemo --force
-* 1.3 nemo路由配置 config/nemo.php 更改rout对应的命名空间
-* 1.4 将laravle的路由改成动态路由,eg /routes/web.php
+* 1.2 nemo路由配置 config/nemo.php 更改rout对应的命名空间
+* 1.3 将laravle的路由改成动态路由,eg: /routes/web.php
 ```
+<?php
 
-Route::prefix('')->group(function (){
+Route::middleware([])->group(function (){
     $config =  config('nemo.route.web',[]);
-    Route::any('{controller}/{action}', static function ($controller, $action)use ($config){
-        return \LaravelNemo\Library\Router::dispatchRoute($controller,$action,$config);
+    \Illuminate\Support\Facades\Route::any('{controller}/{action}', static function ($controller, $action)use ($config){
+        return \LaravelNemo\Library\Router::dispatchDefault($controller,$action,$config);
     })->where('controller','.*');
 });
 ```
 
 
 ##2. LaravelNemo 工具使用
-1.配置好本地网站后 打开localhost/nemo/tools/index
+1.配置好本地网站后 打开localhost/nemo
 2.JSON Mode可以根据json 数据生成数据模型
-3 Table Mode可以更具larval配置的数据库(mysql) 生成Model以及对应的Entity
+3 Table Mode可以根据larval配置的数据库(mysql) 生成Model以及对应的Entity,controller和service文件 
+
 
 ##3. LaravelNemo api接口文档(api接口说明和前端ts请求/响应的数据类型)
 php artisan generate:document
